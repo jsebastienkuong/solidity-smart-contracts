@@ -1,0 +1,31 @@
+pragma solidity ^0.4.0;
+
+
+
+contract ActeNotaire{
+
+    string public hash;
+
+    address public owner;
+
+    
+
+     function ActeNotaire(string _hash) {
+
+        hash = _hash;
+        owner = msg.sender;
+    }   
+
+    modifier isowner(){
+      if(msg.sender!=owner){
+        revert();
+      }
+
+   }
+
+    function kill() isowner(){
+      delete owner;
+      selfdestruct(msg.sender);
+    }
+
+}
