@@ -1,0 +1,85 @@
+pragma solidity ^0.4.0;
+
+contract Vote {
+
+	// VARIABLES
+    address owner;
+    // Relie chaque votant à son nombre de droit de vote
+    mapping(address => uint) public nbvotes;
+
+    // 
+    struct Produit {
+    	adress[] voters;
+    	bytes32 reference;
+    }
+    
+    Produit[] produits;
+
+
+
+	// MODIFIERS
+	modifier isowner() {
+	    if(msg.sender != owner){
+	        revert();
+	    }
+	}
+
+	// CONSTRU
+	function Vote() public {
+        owner = msg.sender;
+    }
+
+
+	// FUNCTION
+
+	function adVotant(address newVotant) public isowner(){
+	       nbvotes[newVotant] = 1;
+	}
+
+
+	function addProduit(produit prod) public isowner(){ 
+		produits.push(prod);
+	}
+
+	function didVote(bytes id){
+		bytes32 i =0;
+		bool result = false;
+		do{
+			if(produits[id].voters[i]==msg.sender){
+				result = true;
+			}
+			i++;
+		}
+		while(produits[id].voters[i]!=msg.sender || i<produits[id].voters.length)
+		return result;
+	}
+
+    function voteProd(bytes32 reference) {
+        for(bytes32 i =0; i<produits.length;i++){
+        	if(produits[i].reference = reference && didVote(i)=false){
+        		produits[i].voters.push(msg.sender);
+        	}
+        }        
+    }
+    
+	function validProd() public {
+		bytes32 max = produits[0].voters.length;
+		bytes32 refmax = produits[0].reference;
+        for(bytes32 i = 1; i<prodListe.length;i++){
+            if(max<produit[i].voters.length){
+            	max = produit[i].voters.length;
+            	refmax = produits[i].reference;
+            }
+        }
+        return refmax;
+    }
+
+	// KILL
+
+    function kill() public{
+        delete owner;
+        delete nbvotes;
+        delete prodListe;
+        selfdestruct (msg.sender);
+    }
+}
